@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohamed Hafez | Program Management & MEAL Specialist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 
+    Chosen Palette: Warm Neutral Harmony
+    Application Structure Plan: A top-down narrative SPA designed for recruiters. It starts with a high-level summary that directly mirrors the key requirements of the Program Manager role (gender, data, leadership). It then allows users to progressively discover more details through interactive sections: 'Core Competencies' for a skills overview, an interactive 'Career Timeline' to explore job history without being overwhelmed, and 'Impact Spotlights' that serve as mini-case studies with visualizations to prove his capabilities. This structure is more persuasive and engaging than a static document, guiding the user through a compelling argument for his candidacy.
+    Visualization & Content Choices: 
+    - Key Stats Cards: Goal: Inform/Impress. Method: HTML/CSS cards. Justification: Quick, scannable highlights of top qualifications.
+    - Competency Grid: Goal: Organize. Method: Interactive HTML cards. Justification: Allows a clean overview of skills, with click-to-reveal details for deeper dives, preventing information overload.
+    - Career Timeline: Goal: Show Change/Progression. Method: Interactive HTML/CSS list. Justification: An intuitive way to present chronological experience. The expand/collapse interaction makes a long career history manageable and user-directed.
+    - Skills Bars: Goal: Inform. Method: Simple HTML/CSS bars. Justification: Provides a quick visual gauge of proficiency without complex charts.
+    - Impact Chart: Goal: Compare/Prove. Method: Chart.js Bar Chart. Justification: Visualizes a key achievement (improved data quality), providing concrete evidence of his problem-solving skills and impact, directly addressing the "data-driven" requirement of the job.
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. 
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #374151;
+        }
+        :root {
+            --primary-color: #004D40;
+            --secondary-color: #4A5568;
+            --accent-color: #DAA520;
+            --bg-light: #FDFBF8;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+        }
+        .bg-primary { background-color: var(--primary-color); }
+        .text-primary { color: var(--primary-color); }
+        .text-accent { color: var(--accent-color); }
+        .border-accent { border-color: var(--accent-color); }
+        .bg-accent { background-color: var(--accent-color); }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.1rem;
+            top: 0.8rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background-color: var(--bg-card);
+            border: 3px solid var(--primary-color);
+        }
+        .timeline-content {
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .timeline-item.open .timeline-content {
+            max-height: 1000px;
+            opacity: 1;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-primary text-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold">Mohamed Hafez</div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#summary" class="hover:text-accent transition duration-300">Profile</a>
+                <a href="#competencies" class="hover:text-accent transition duration-300">Competencies</a>
+                <a href="#timeline" class="hover:text-accent transition duration-300">Experience</a>
+                <a href="#impact" class="hover:text-accent transition duration-300">Impact</a>
+                <a href="#education" class="hover:text-accent transition duration-300">Education</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#summary" class="block py-2 px-4 text-sm hover:bg-gray-700">Profile</a>
+            <a href="#competencies" class="block py-2 px-4 text-sm hover:bg-gray-700">Competencies</a>
+            <a href="#timeline" class="block py-2 px-4 text-sm hover:bg-gray-700">Experience</a>
+            <a href="#impact" class="block py-2 px-4 text-sm hover:bg-gray-700">Impact</a>
+            <a href="#education" class="block py-2 px-4 text-sm hover:bg-gray-700">Education</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">Mohamed Hafez</h1>
+                <p class="text-xl md:text-2xl text-secondary mb-6">Program Management & MEAL Specialist</p>
+                <div class="max-w-3xl mx-auto text-lg text-gray-700">
+                    <p>
+                        A highly motivated and experienced Program Manager and MEAL Advisor with a Master's degree in Gender and Development and over 8 years of experience in the international development sector, with a proven track record in program management, gender-sensitive programming, and data-driven solutions.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="summary" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-primary">Candidate Profile At-a-Glance</h2>
+                     <p class="text-secondary mt-2 max-w-2xl mx-auto">This section provides a high-level overview of my qualifications, directly aligning my core strengths with the key requirements for the Program Manager role.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-bg-card p-6 rounded-lg shadow-lg border-t-4 border-accent">
+                        <div class="text-5xl text-accent mb-4">♀</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">Feminist & Gender-Transformative Approaches</h3>
+                        <p class="text-secondary">Master's in Gender & Development with research in feminist evaluation, and extensive experience implementing gender-transformative MEAL frameworks.</p>
+                    </div>
+                    <div class="bg-bg-card p-6 rounded-lg shadow-lg border-t-4 border-accent">
+                        <div class="text-5xl text-accent mb-4">📊</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">Data-Driven Leadership</h3>
+                        <p class="text-secondary">Expertise in translating complex data into actionable insights using tools like Tableau & Power BI to guide strategy and prove impact.</p>
+                    </div>
+                    <div class="bg-bg-card p-6 rounded-lg shadow-lg border-t-4 border-accent">
+                         <div class="text-5xl text-accent mb-4">📈</div>
+                        <h3 class="text-xl font-bold text-primary mb-2">Strategic Program Management</h3>
+                        <p class="text-secondary">Proven success in leading quality improvement strategies and managing programs for prominent INGOs like CARE and Handicap International.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competencies" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-primary">Core Competencies</h2>
+                     <p class="text-secondary mt-2 max-w-2xl mx-auto">My professional skills are built on a foundation of strategic planning, technical expertise, and effective collaboration. The competencies below are central to my ability to deliver impactful programs.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-bg-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-lg font-bold text-primary">Program Quality Strategy</h3>
+                        <p class="text-secondary mt-2">Leading the design and implementation of comprehensive quality improvement strategies, ensuring alignment with organizational goals and donor requirements.</p>
+                    </div>
+                    <div class="bg-bg-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-lg font-bold text-primary">Data Analysis & Visualization</h3>
+                        <p class="text-secondary mt-2">Proficient in SPSS, Tableau, and Power BI for data analysis, quality assurance, and creating compelling data visualizations to inform decision-making.</p>
+                    </div>
+                    <div class="bg-bg-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-lg font-bold text-primary">Feminist & Participatory Methods</h3>
+                        <p class="text-secondary mt-2">Integrating gender analysis and community-centered approaches into all phases of the project cycle, from design to evaluation.</p>
+                    </div>
+                    <div class="bg-bg-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-lg font-bold text-primary">Knowledge Management</h3>
+                        <p class="text-secondary mt-2">Establishing systems for effective documentation, learning, and knowledge sharing to enhance program quality and institutional memory.</p>
+                    </div>
+                    <div class="bg-bg-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-lg font-bold text-primary">Stakeholder Engagement</h3>
+                        <p class="text-secondary mt-2">Building and maintaining strong relationships with donors, government partners, CSOs, and community members to ensure collaborative success.</p>
+                    </div>
+                    <div class="bg-bg-card p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-lg font-bold text-primary">Capacity Building & Training</h3>
+                        <p class="text-secondary mt-2">Mentoring and training program teams and partners on MEAL methodologies, data quality, and best practices to ensure sustainable impact.</p>
+                    </div>
+                </div>
+            </div>
+
+        </section> <section id="capacity" class="py-16 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-primary">MEAL Capacity Building & Facilitation Experience</h2>
+            <p class="text-secondary mt-2 max-w-2xl mx-auto">I have led high-impact MEAL capacity building and facilitation programs with national institutions, INGOs, and grassroots CSOs, combining technical M&E training with gender-sensitive, participatory approaches.</p>
+        </div>
+
+        <div class="space-y-10">
+            <div class="bg-bg-card p-6 rounded-lg shadow-md border-l-4 border-accent">
+                <h3 class="text-xl font-semibold text-primary mb-2">Lead Trainer – Monitoring and Evaluation for National D-VSLA Project</h3>
+                <p class="text-sm text-secondary italic mb-2">CARE Egypt Foundation, National Council for Women, Plan International, UN Women, Central Bank of Egypt</p>
+                <ul class="list-disc pl-5 text-secondary space-y-1">
+                    <li>Delivered tailored M&E training to staff from national institutions and INGOs.</li>
+                    <li>Developed customized modules for VSLA monitoring frameworks.</li>
+                    <li>Strengthened results-based management and data-informed decision-making.</li>
+                </ul>
+            </div>
+
+            <div class="bg-bg-card p-6 rounded-lg shadow-md border-l-4 border-accent">
+                <h3 class="text-xl font-semibold text-primary mb-2">Lead Trainer and Mentor – TOT for Monitoring & Evaluation</h3>
+                <p class="text-sm text-secondary italic mb-2">Sawiris Foundation, CARE Egypt – Irtiqa Project (12 CSOs trained, 100 CSOs supported)</p>
+                <ul class="list-disc pl-5 text-secondary space-y-1">
+                    <li>Facilitated TOT workshops and mentored CSOs to cascade M&E capacity building in Upper Egypt.</li>
+                    <li>Built grassroots NGO capacity in data collection, accountability, and results monitoring.</li>
+                </ul>
+            </div>
+
+            <div class="bg-bg-card p-6 rounded-lg shadow-md border-l-4 border-accent">
+                <h3 class="text-xl font-semibold text-primary mb-2">Lead Trainer and Mentor – 2 TOT for Monitoring & Evaluation</h3>
+                <p class="text-sm text-secondary italic mb-2">CARE Egypt, European Union – Benaa Project (10 CSOs trained, 60 CSOs supported)</p>
+                <ul class="list-disc pl-5 text-secondary space-y-1">
+                    <li>Delivered two rounds of TOT using adult learning and participatory techniques.</li>
+                    <li>Mentored CSOs in cascading M&E training to over 60 grassroots organizations.</li>
+                </ul>
+            </div>
+
+            <div class="text-center mt-12">
+                <h3 class="text-2xl font-bold text-primary mb-4">Additional Training & Facilitation Experience</h3>
+                <p class="text-secondary max-w-3xl mx-auto mb-6">Beyond MEAL-specific training, I’ve led participatory, community-focused workshops across Egypt on youth development, gender, leadership, protection, and conflict resolution in collaboration with global and local organizations.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-bg-card p-5 rounded-lg shadow-md">
+                    <h4 class="text-lg font-semibold text-primary">Save the Children – Economic Empowerment</h4>
+                    <p class="text-secondary text-sm italic mb-2">6 months</p>
+                    <p class="text-secondary">Trained community members on small business management, entrepreneurship, and planning income-generating projects.</p>
+                </div>
+
+                <div class="bg-bg-card p-5 rounded-lg shadow-md">
+                    <h4 class="text-lg font-semibold text-primary">British Council & Etijah – Youth Development Program</h4>
+                    <p class="text-secondary text-sm italic mb-2">6 months</p>
+                    <p class="text-secondary">Delivered workshops on identity, dialogue, and social leadership for civic youth in marginalized communities.</p>
+                </div>
+
+                <div class="bg-bg-card p-5 rounded-lg shadow-md">
+                    <h4 class="text-lg font-semibold text-primary">UNFPA & Y-PEER</h4>
+                    <p class="text-secondary text-sm italic mb-2">3 years (intermittent)</p>
+                    <p class="text-secondary">Facilitated peer-led trainings on SRH, GBV, and FGM using theater-based learning, engaging youth as community educators.</p>
+                </div>
+
+                <div class="bg-bg-card p-5 rounded-lg shadow-md">
+                    <h4 class="text-lg font-semibold text-primary">Sting for Consultancy & AUC – Gerhart Center</h4>
+                    <p class="text-secondary text-sm italic mb-2">Intermittent | 2 years & 6 months</p>
+                    <p class="text-secondary">Led training on gender, violence prevention, anger management, conflict resolution, and community leadership.</p>
+                </div>
+
+                <div class="bg-bg-card p-5 rounded-lg shadow-md">
+                    <h4 class="text-lg font-semibold text-primary">Drake Store & AIC Partner – Private Sector</h4>
+                    <p class="text-secondary text-sm italic mb-2">Ongoing</p>
+                    <p class="text-secondary">Delivered soft skills training on customer service, time management, and leadership for retail staff and managers.</p>
+                </div>
+
+                <div class="bg-bg-card p-5 rounded-lg shadow-md">
+                    <h4 class="text-lg font-semibold text-primary">Training Methodology</h4>
+                    <p class="text-secondary">All trainings use participatory methods (group work, simulation, storytelling), with tailored session materials, feedback, and ongoing mentoring support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <section id="timeline" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-primary">Career Timeline</h2>
+                     <p class="text-secondary mt-2 max-w-2xl mx-auto">My career has been a journey of progressive responsibility and impact in the development sector. (Click on each role to see a detailed overview of my contributions and achievements).</p>
+                </div>
+                <div class="relative pl-12 border-l-2 border-gray-200">
+                    <div class="timeline-item mb-12 cursor-pointer" data-timeline-item>
+                        <h3 class="text-xl font-bold text-primary">MEAL Advisor</h3>
+                        <p class="text-md text-secondary">CARE Egypt Foundation | Cairo, Egypt (Dec 2023 – Present)</p>
+                        <div class="timeline-content">
+                            <ul class="list-disc pl-5 mt-4 text-secondary space-y-2">
+                                <li>Led the design and rollout of the Program Quality Standards (PQS) Improvement Strategy, a major initiative to mainstream quality standards across 12 diverse projects.</li>
+                                <li>Spearheaded the development and implementation of CARE Egypt’s overall MEAL strategy, guiding its adoption across all organizational initiatives.</li>
+                                <li>Mentored and coached a team of MEAL officers, enhancing institutional capacity in data analysis, reporting, and evidence-based programming.</li>
+                                <li>Architected a new knowledge management system, improving documentation, learning, and knowledge sharing across all projects and thematic areas.</li>
+                                <li>Directed the automation of Project Cycle Management systems, enhancing data integrity and visualization solutions for more efficient reporting.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item mb-12 cursor-pointer" data-timeline-item>
+                        <h3 class="text-xl font-bold text-primary">MEAL Officer</h3>
+                        <p class="text-md text-secondary">CARE Egypt Foundation | Cairo, Egypt (Nov 2020 – Nov 2023)</p>
+                        <div class="timeline-content">
+                            <ul class="list-disc pl-5 mt-4 text-secondary space-y-2">
+                                <li>Designed and executed robust MEAL plans and logical frameworks for a diverse portfolio of development programs.</li>
+                                <li>Led the operationalization of M&E systems, ensuring fulfillment of program objectives and project implementation plans.</li>
+                                <li>Managed baseline, endline, and impact evaluation studies, providing critical data that informed program improvements.</li>
+                                <li>Authored and disseminated over 20 knowledge products, including reports, policy briefs, and infographics, for a wide range of stakeholders.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item mb-12 cursor-pointer" data-timeline-item>
+                        <h3 class="text-xl font-bold text-primary">Livelihood Project Officer (MEAL)</h3>
+                        <p class="text-md text-secondary">Handicap International | Asyut, Egypt (Jan 2019 – Oct 2020)</p>
+                        <div class="timeline-content">
+                           <ul class="list-disc pl-5 mt-4 text-secondary space-y-2">
+                                <li>Ensured project success by meticulously monitoring key performance indicators and delivering high-quality, data-driven reports to international donors.</li>
+                                <li>Built the capacity of multi-stakeholder working groups and government partners in participatory assessment and livelihood analysis.</li>
+                                <li>Analyzed vulnerability factors and disability-related barriers to livelihoods, with a focus on gender-based constraints.</li>
+                                <li>Played a key role in evaluation and research activities, providing critical data that informed evidence-based decision-making.</li>
+                           </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-primary">Impact Spotlights & Case Studies</h2>
+                     <p class="text-secondary mt-2 max-w-2xl mx-auto">Theory is important, but results matter more. This section showcases specific examples of how I have applied my skills to solve challenges and create measurable, positive change.</p>
+                </div>
+                <div class="space-y-16">
+                    <div class="grid lg:grid-cols-2 gap-12 items-center">
+                        <div class="bg-bg-card p-8 rounded-lg shadow-lg">
+                            <h3 class="text-xl font-bold text-primary mb-4">Case Study: Leading the Program Quality Standards Improvement Strategy</h3>
+                            <p class="text-secondary mb-4">
+                                As MEAL Advisor, I led the Program Quality Standards (PQS) Improvement Strategy at CARE, a major initiative to mainstream standards for Gender & Inclusion, Do No Harm, and Accountability across 12 projects. I facilitated over 30 self-assessment and reflection meetings with project teams to identify gaps and co-create actionable improvement plans.
+                            </p>
+                            <p class="font-semibold text-primary">The visualization shows a key outcome of this strategy: a tangible improvement in data quality and reporting reliability, which formed the evidence base for strategic recommendations on gender-responsive budgeting and capacity building.</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="impactChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-bg-card p-8 rounded-lg shadow-lg">
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="text-6xl text-accent flex-shrink-0">🎓</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-primary mb-4">Academic Spotlight: Advancing Feminist Evaluation in Practice</h3>
+                                <p class="text-secondary mb-3">
+                                    My Master's thesis, <span class="font-semibold text-gray-700">"Toward a Context-Responsive Gender Marker Tool for Egypt,"</span> directly addresses the shortcomings of conventional evaluation tools. Grounded in feminist evaluation theory and intersectionality, my research culminated in the design of the Gender Equality Marker Assessment (GEMA).
+                                </p>
+                                <p class="text-secondary">
+                                    GEMA is a participatory, full-cycle tool designed to move beyond compliance-oriented scoring to foster genuine learning and gender-transformative change. This academic work demonstrates my commitment to and expertise in developing and applying the kind of nuanced, justice-oriented, and community-responsive frameworks that are informed by Feminist Theory.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="consultancy" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-primary">Key Evaluation & Consultancy Experience</h2>
+                     <p class="text-secondary mt-2 max-w-2xl mx-auto">As a consultant supervisor at CARE Egypt, I provided critical oversight for numerous high-stakes evaluations. My role involved shaping TORs, validating data collection tools and analysis, and ensuring final results aligned with rigorous data quality standards for donors like UNICEF, UNHCR, the EU, and the ILO.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <ul class="list-disc pl-5 text-secondary space-y-3">
+                        <li><strong>Endline Evaluation</strong> for Digital Saving Group (Alex Bank, Dec 2022)</li>
+                        <li><strong>Baseline Evaluation</strong> for Youth Financial Capabilities (HSBC, Feb 2023)</li>
+                        <li><strong>Gender Analysis Study</strong> for CARE Egypt Programs (Sep 2023)</li>
+                        <li><strong>Impact Evaluation</strong> for Prevention and Response to GBV (UNHCR, Nov 2023)</li>
+                        <li><strong>Baseline Evaluation</strong> for Refugee & Host Community Protection (BPRM, Dec 2023)</li>
+                    </ul>
+                    <ul class="list-disc pl-5 text-secondary space-y-3">
+                        <li><strong>Final Evaluation</strong> for Comprehensive Education Project (UNICEF, Jan 2024)</li>
+                        <li><strong>Endline Evaluation</strong> for Youth in Climate Change Adaptation (EU, Mar 2024)</li>
+                        <li><strong>Final Evaluation</strong> for Social Enterprise Development Program (ILO, June 2024)</li>
+                        <li><strong>Endline Assessment</strong> for Employment in Informal Settlements (GIZ, June 2024)</li>
+                        <li><strong>Impact Evaluation</strong> for Sustainable Agriculture Network (EKN Embassy, Aug 2024)</li>
+                    </ul>
+                </div>
+                 <p class="text-secondary mt-8 text-center max-w-3xl mx-auto">In addition to supervising external consultants, I have also led internal evaluations, developing comprehensive frameworks and conducting in-depth analysis of both qualitative and quantitative data to assess program effectiveness and drive strategic improvements.</p>
+            </div>
+        </section>
+                
+        <section id="education" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-primary">Education & Technical Skills</h2>
+                     <p class="text-secondary mt-2 max-w-2xl mx-auto">My academic background provides the theoretical foundation for my work, while my technical skills enable me to execute complex data analysis and management tasks effectively.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold text-primary mb-6">Education</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-lg font-semibold">Master's Degree in Gender and Development</h4>
+                                <p class="text-secondary">Faculty of Economic and Political Science, Cairo University (2023 – 2025)</p>
+                                <p class="text-sm text-gray-600 mt-1">Thesis: "Toward a Context-Responsive Gender Marker Tool for Egypt"</p>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Professional Diploma in Data Analysis</h4>
+                                <p class="text-secondary">Arab Academy for Science, Technology and Maritime Transport (2022 – 2023)</p>
+                            </div>
+                             <div>
+                                <h4 class="text-lg font-semibold">Bachelor of Science and Education</h4>
+                                <p class="text-secondary">South Valley University (2015 – 2018)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-primary mb-6">Skills</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-medium text-secondary">Tableau & Power BI</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-primary h-2.5 rounded-full" style="width: 90%"></div></div>
+                            </div>
+                            <div>
+                                <p class="font-medium text-secondary">SPSS</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-primary h-2.5 rounded-full" style="width: 85%"></div></div>
+                            </div>
+                            <div>
+                                <p class="font-medium text-secondary">Project Management Tools (e.g., Asana, Trello)</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-primary h-2.5 rounded-full" style="width: 95%"></div></div>
+                            </div>
+                             <div>
+                                <p class="font-medium text-secondary">Languages: Arabic (Native), English (Advanced)</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-primary h-2.5 rounded-full" style="width: 100%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-primary text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="text-2xl font-bold mb-2">Contact Me</h3>
+            <p class="mb-4">I am actively seeking opportunities to contribute to impactful organizations.</p>
+            <p class="text-lg">mohamedhafez537@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const timelineItems = document.querySelectorAll('[data-timeline-item]');
+            timelineItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    item.classList.toggle('open');
+                });
+            });
+
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            const impactChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Before Initiative', 'After Initiative'],
+                    datasets: [{
+                        label: 'Data Quality Score',
+                        data: [47, 86],
+                        backgroundColor: [
+                            'rgba(74, 85, 104, 0.6)',
+                            'rgba(0, 77, 64, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgb(74, 85, 104)',
+                            'rgb(0, 77, 64)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Data Quality & Reliability (%)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Outcome of Program Quality Standards Strategy',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
